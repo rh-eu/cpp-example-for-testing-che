@@ -1,0 +1,62 @@
+{
+  "metadata": {
+    "name": "cpp-example"
+  },
+  "projects": [
+    {
+      "name": "cpp-example-for-testing-che",
+      "source": {
+        "location": "https://github.com/rh-eu/cpp-example-for-testing-che.git",
+        "type": "git",
+        "branch": "master"
+      }
+    }
+  ],
+  "components": [
+    {
+      "mountSources": true,
+      "memoryLimit": "512Mi",
+      "type": "dockerimage",
+      "image": "quay.io/eclipse/che-cpp-rhel7:7.18.0",
+      "alias": "cpp-dev"
+    },
+    {
+      "id": "eclipse-cdt/cdt-vscode/latest",
+      "type": "chePlugin"
+    }
+  ],
+  "apiVersion": "1.0.0",
+  "commands": [
+    {
+      "name": "build",
+      "actions": [
+        {
+          "workdir": "${CHE_PROJECTS_ROOT}/cpp-example-for-testing-che/hello",
+          "type": "exec",
+          "command": "g++ -g hello.cpp -o hello.out && echo \"Build complete\"",
+          "component": "cpp-dev"
+        }
+      ]
+    },
+    {
+      "name": "run",
+      "actions": [
+        {
+          "workdir": "${CHE_PROJECTS_ROOT}/cpp-example-for-testing-che/hello",
+          "type": "exec",
+          "command": "./hello.out",
+          "component": "cpp-dev"
+        }
+      ]
+    },
+    {
+      "name": "debug",
+      "actions": [
+        {
+          "referenceContent": "{\n  \"version\": \"0.2.0\",\n  \"configurations\": [\n      {\n          \"type\": \"gdb\",\n          \"name\": \"Debug c++ application\",\n          \"request\": \"launch\",\n          \"program\": \"/projects/cpp-example-for-testing-che/hello//hello.out\"\n      }\n  ]\n}\n",
+          "type": "vscode-launch"
+        }
+      ]
+    }
+  ]
+}
